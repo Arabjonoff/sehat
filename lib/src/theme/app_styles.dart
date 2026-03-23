@@ -22,4 +22,11 @@ class AppStyles {
         color: color
     );
   }
+  static TextStyle textStyle14Medium(Color color){
+    return TextStyle(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w600,
+        color: color
+    );
+  }
 }

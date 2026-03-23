@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sehat/src/dialog/loading_dialog.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_icons.dart';
 import 'package:sehat/src/widget/button_widget.dart';
@@ -85,7 +87,8 @@ class _OnboardScreenState extends State<OnboardScreen> {
                 curve: Curves.easeInOut,
               );
             } else {
-              
+              context.push('/login');
+              // LoadingDialog.show(context);
             }
           }),
           Gap(38.h)
