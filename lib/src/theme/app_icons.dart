@@ -1,10 +1,12 @@
 class AppIcons {
   static const logo = 'assets/icons/splash_logo.svg';
   static const navHome = 'assets/icons/home.svg';
-  static const navServices = 'assets/icons/health.svg';
+  static const navServices = 'assets/icons/healt.svg';
   static const navBooking = 'assets/icons/time.svg';
   static const navAnalyses = 'assets/icons/dna.svg';
   static const navChat = 'assets/icons/chat.svg';
+  static const giftbox = 'assets/icons/giftbox.svg';
+  static const search = 'assets/icons/search.svg';
 }
 class AppImages{
   static const onboard1 = 'assets/images/onboard1.png';

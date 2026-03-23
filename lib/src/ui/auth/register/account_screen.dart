@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart'; // Sanani formatlash uchun kerak: flutter pub add intl
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_styles.dart';
@@ -135,7 +136,7 @@ class _AccountScreenState extends State<AccountScreen> {
             text: "Continue",
             isActive: nameController.text.isNotEmpty && selectedGender != null && dobController.text.isNotEmpty,
             onTap: () {
-              // Keyingi sahifaga o'tish mantiqi
+              context.go("/main");
             },
           ),
           Gap(34.h)

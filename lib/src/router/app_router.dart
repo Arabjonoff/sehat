@@ -4,6 +4,7 @@ import 'package:sehat/src/ui/auth/login/login_screen.dart';
 import 'package:sehat/src/ui/auth/register/account_screen.dart';
 import 'package:sehat/src/ui/auth/register/register_screen.dart';
 import 'package:sehat/src/ui/auth/verification/verification_screen.dart';
+import 'package:sehat/src/ui/main/main_screen.dart';
 import 'package:sehat/src/ui/splash/onboard/onboard_screen.dart';
 import 'package:sehat/src/ui/splash/splash_screen.dart';
 
@@ -45,6 +46,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/account',
       builder: (context, state) => AccountScreen(),
+    ),
+    GoRoute(
+      path: '/main',
+      builder: (context, state) => MainScreen(),
     ),
   ]
 );
