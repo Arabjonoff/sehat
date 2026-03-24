@@ -7,6 +7,9 @@ class AppIcons {
   static const navChat = 'assets/icons/chat.svg';
   static const giftbox = 'assets/icons/giftbox.svg';
   static const search = 'assets/icons/search.svg';
+  static const calendar = 'assets/icons/calendar.svg';
+  static const clock = 'assets/icons/clock.svg';
+  static const file = 'assets/icons/file.svg';
 }
 class AppImages{
   static const onboard1 = 'assets/images/onboard1.png';
@@ -17,4 +20,5 @@ class AppImages{
   static const story3 = 'assets/images/story3.png';
   static const story4 = 'assets/images/story4.png';
   static const story5 = 'assets/images/story5.png';
+  static const cardimage = 'assets/images/cardimage.png';
 }

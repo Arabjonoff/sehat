@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
+// O'zingizning pathlaringizni tekshirib oling
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_icons.dart';
 import 'package:sehat/src/ui/main/home/home_screen.dart';
@@ -16,6 +18,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const Center(child: Text("Services")),
+    const Center(child: Text("Booking")),
+    const Center(child: Text("Analyses")),
+    const Center(child: Text("Chat")),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,45 +33,38 @@ class _MainScreenState extends State<MainScreen> {
       extendBody: true,
       body: IndexedStack(
         index: _selectedIndex,
-        children: [
-          HomeScreen(),
-          const Center(child: Text("Appointments")),
-          const Center(child: Text("Messages")),
-          const Center(child: Text("Profile")),
-        ],
+        children: _screens,
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 34.h),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20.r),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Container(
-              height: 70.h,
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.03),
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.2), // Shisha cheti (Reflection)
-                  width: 0.5,
-                ),
+      bottomNavigationBar: _buildBottomBar(),
+    );
+  }
+
+  Widget _buildBottomBar() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 30.h),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24.r),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+          child: Container(
+            height: 74.h,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(24.r),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.2),
+                width: 1.2,
               ),
-              child: BottomNavigationBar(
-                currentIndex: _selectedIndex,
-                onTap: (index) => setState(() => _selectedIndex = index),
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: AppColors.primary,
-                unselectedItemColor: Colors.black38,
-                items: [
-                  BottomNavigationBarItem(icon: SvgPicture.asset(AppIcons.navHome), label: "Home"),
-                  BottomNavigationBarItem(icon: SvgPicture.asset(AppIcons.navServices), label: "Services"),
-                  BottomNavigationBarItem(icon: SvgPicture.asset(AppIcons.navBooking), label: "Booking"),
-                  BottomNavigationBarItem(icon: SvgPicture.asset(AppIcons.navAnalyses), label: "Analyses"),
-                  BottomNavigationBarItem(icon: SvgPicture.asset(AppIcons.navChat), label: "Chat"),
-                ],
-              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(AppIcons.navHome, "Home", 0),
+                _buildNavItem(AppIcons.navServices, "Services", 1),
+                _buildNavItem(AppIcons.navBooking, "Booking", 2),
+                _buildNavItem(AppIcons.navAnalyses, "Analyses", 3),
+                _buildNavItem(AppIcons.navChat, "Chat", 4),
+              ],
             ),
           ),
         ),
@@ -69,4 +72,37 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  Widget _buildNavItem(String icon, String label, int index) {
+    bool isSelected = _selectedIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => setState(() => _selectedIndex = index),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              icon,
+              width: 22.w,
+              height: 22.h,
+              colorFilter: ColorFilter.mode(
+                isSelected ? AppColors.primary : Colors.black38,
+                BlendMode.srcIn,
+              ),
+            ),
+            Gap(6.h),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                color: isSelected ? AppColors.primary : Colors.black38,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

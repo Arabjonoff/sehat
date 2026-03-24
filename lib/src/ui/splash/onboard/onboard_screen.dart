@@ -79,7 +79,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
               }),
             ),
           ),
-          Gap(66.h),
+          Gap(50.h),
           ButtonWidget(text: "Next", onTap: (){
             if (_currentIndex < 2) {
               _controller.nextPage(
