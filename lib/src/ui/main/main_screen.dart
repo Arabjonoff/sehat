@@ -59,11 +59,11 @@ class _MainScreenState extends State<MainScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(AppIcons.navHome, "Home", 0),
-                _buildNavItem(AppIcons.navServices, "Services", 1),
-                _buildNavItem(AppIcons.navBooking, "Booking", 2),
-                _buildNavItem(AppIcons.navAnalyses, "Analyses", 3),
-                _buildNavItem(AppIcons.navChat, "Chat", 4),
+                _buildNavItem(AppIcons.navHome,AppIcons.navActiveHome, "Home", 0),
+                _buildNavItem(AppIcons.navServices,AppIcons.navActiveServices, "Services", 1),
+                _buildNavItem(AppIcons.navBooking,AppIcons.navActiveServices, "Booking", 2),
+                _buildNavItem(AppIcons.navAnalyses,AppIcons.navAnalyses, "Analyses", 3),
+                _buildNavItem(AppIcons.navChat,AppIcons.navChat, "Chat", 4),
               ],
             ),
           ),
@@ -72,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildNavItem(String icon, String label, int index) {
+  Widget _buildNavItem(String icon,activeicon, String label, int index) {
     bool isSelected = _selectedIndex == index;
     return Expanded(
       child: GestureDetector(
@@ -83,13 +83,10 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              icon,
+              isSelected?activeicon:icon,
               width: 22.w,
               height: 22.h,
-              colorFilter: ColorFilter.mode(
-                isSelected ? AppColors.primary : Colors.black38,
-                BlendMode.srcIn,
-              ),
+
             ),
             Gap(6.h),
             Text(

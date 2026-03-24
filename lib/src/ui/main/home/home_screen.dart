@@ -26,13 +26,15 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 40.r,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                color: AppColors.white
               ),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.asset(AppImages.cardimage,fit: BoxFit.cover,)),
             ),
             Spacer(),
             Container(
               padding: EdgeInsets.all(5.r),
-              width: 90.w,
+              width: 95.w,
               height: 36.h,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
@@ -48,12 +50,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Spacer(),
             Container(
+              padding: EdgeInsets.all(10.r),
               width: 40.r,
               height: 40.r,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
                   color: AppColors.white.withOpacity(0.1)
               ),
+              child: SvgPicture.asset(AppIcons.notification),
             ),
           ],
         ),
@@ -132,6 +136,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: AppColors.primary,
                         borderRadius: BorderRadius.circular(50),
                       ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(AppImages.cardimage,fit: BoxFit.cover,)),
+
                     ),
                     Expanded(
                       child: Column(
@@ -144,6 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: AppColors.primary.withOpacity(0.16),
                               borderRadius: BorderRadius.circular(6)
                             ),
+
                             padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 4.h),
                               child: Text("Dentist",style: AppStyles.textStyle12Regular(AppColors.primary),)),
                         ],
@@ -192,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 16.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -201,6 +210,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+          Divider(
+            color: Color(0xffE2E8F0).withOpacity(0.5),
+          ),
+          Gap(16),
           SizedBox(
             width: 1.sw,
             height: 262.h,

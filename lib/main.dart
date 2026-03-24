@@ -20,14 +20,19 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Sehat',
           theme: ThemeData(
-            fontFamily: 'NeueMontreal',
+            // BU YERDA: pubspec.yaml dagi family nomi bilan bir xil bo'lishi kerak
+            fontFamily: 'Montreal',
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
           routerConfig: appRouter,
           builder: (context, widget) {
             return MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+              // Foydalanuvchi telefon sozlamalaridan shriftni kattalashtirsa ham
+              // dizayningiz buzilmasligi uchun juda to'g'ri tanlov!
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1.0),
+              ),
               child: widget!,
             );
           },

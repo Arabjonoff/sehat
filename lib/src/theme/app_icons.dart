@@ -1,8 +1,11 @@
 class AppIcons {
   static const logo = 'assets/icons/splash_logo.svg';
   static const navHome = 'assets/icons/home.svg';
+  static const navActiveHome = 'assets/icons/activehome.svg';
   static const navServices = 'assets/icons/healt.svg';
+  static const navActiveServices = 'assets/icons/activehealt.svg';
   static const navBooking = 'assets/icons/time.svg';
+  static const navActiveBooking = 'assets/icons/activetime.svg';
   static const navAnalyses = 'assets/icons/dna.svg';
   static const navChat = 'assets/icons/chat.svg';
   static const giftbox = 'assets/icons/giftbox.svg';
@@ -10,6 +13,7 @@ class AppIcons {
   static const calendar = 'assets/icons/calendar.svg';
   static const clock = 'assets/icons/clock.svg';
   static const file = 'assets/icons/file.svg';
+  static const notification = 'assets/icons/notification.svg';
 }
 class AppImages{
   static const onboard1 = 'assets/images/onboard1.png';
