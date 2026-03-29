@@ -13,7 +13,7 @@ final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => SplashScreen(),
+      builder: (context, state) => MainScreen(),
     ),
     GoRoute(
       path: '/onboarding',

@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Sehat',
           theme: ThemeData(
-            // BU YERDA: pubspec.yaml dagi family nomi bilan bir xil bo'lishi kerak
             fontFamily: 'Montreal',
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
@@ -28,8 +27,6 @@ class MyApp extends StatelessWidget {
           routerConfig: appRouter,
           builder: (context, widget) {
             return MediaQuery(
-              // Foydalanuvchi telefon sozlamalaridan shriftni kattalashtirsa ham
-              // dizayningiz buzilmasligi uchun juda to'g'ri tanlov!
               data: MediaQuery.of(context).copyWith(
                 textScaler: const TextScaler.linear(1.0),
               ),

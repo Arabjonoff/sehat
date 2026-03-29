@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_icons.dart';
 import 'package:sehat/src/ui/main/home/home_screen.dart';
+import 'package:sehat/src/ui/main/service/services_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const Center(child: Text("Services")),
+    ServicesScreen(),
     const Center(child: Text("Booking")),
     const Center(child: Text("Analyses")),
     const Center(child: Text("Chat")),
