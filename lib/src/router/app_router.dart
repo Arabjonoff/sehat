@@ -41,7 +41,11 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/verification',
-      builder: (context, state) => VerificationScreen(),
+      builder: (context, state){
+        final phone = state.uri.queryParameters['phone'] ?? '';
+        final isRegister = state.uri.queryParameters['isRegister'] ?? 'false';
+        return  VerificationScreen(phone: phone, isRegister: isRegister,);
+      },
     ),
     GoRoute(
       path: '/account',

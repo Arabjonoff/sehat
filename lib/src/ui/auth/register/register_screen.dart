@@ -3,6 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart'; // 1. Import
+import 'package:sehat/src/api_service/repository.dart';
+import 'package:sehat/src/dialog/app_toast.dart';
+import 'package:sehat/src/dialog/loading_dialog.dart';
+import 'package:sehat/src/model/http_result.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_styles.dart';
 import 'package:sehat/src/widget/button_widget.dart';
@@ -17,6 +21,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController controllerPhone = TextEditingController();
   bool isFull = false;
+  final Repository _repository = Repository();
   var maskFormatter = MaskTextInputFormatter(
     mask: '+998 ## ### ## ##',
     filter: { "#": RegExp(r'[0-9]') },
@@ -79,7 +84,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                       filled: true,
                       fillColor: Colors.white,
-                      // Borderlar dizayni
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100.r),
                         borderSide: BorderSide(color: Color(0xffE2E8F0)),
@@ -122,9 +126,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ButtonWidget(
             isActive: isFull,
             text: "Continue",
-            onTap: () {
+            onTap: () async{
               String fullNumber = maskFormatter.getUnmaskedText();
-              context.push('/verification');
+              LoadingDialog.show(context);
+              Map data  = {
+                "phone":"+998$fullNumber"
+              };
+              HttpResult res = await _repository.verifyRegister(data);
+              if(res.status >= 200&&res.status < 299){
+                LoadingDialog.hide(context);
+                context.push("/verification?phone=+998$fullNumber&isRegister=true");
+              }else{
+                LoadingDialog.hide(context);
+                AppToast.error(context: context, description: res.result['phone']??["code"].toString());
+              }
             },
           ),
           Gap(34.h)

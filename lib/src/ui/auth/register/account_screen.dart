@@ -3,9 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart'; // Sanani formatlash uchun kerak: flutter pub add intl
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:sehat/src/api_service/repository.dart';
+import 'package:sehat/src/dialog/app_toast.dart';
+import 'package:sehat/src/dialog/loading_dialog.dart';
+import 'package:sehat/src/model/http_result.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_styles.dart';
 import 'package:sehat/src/widget/button_widget.dart';
+import 'package:sehat/utils/cacheservice.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -18,8 +24,15 @@ class _AccountScreenState extends State<AccountScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
   String? selectedGender;
+  TextEditingController controllerPhone = TextEditingController();
+  bool isFull = false;
+  final Repository _repository = Repository();
+  var maskFormatter = MaskTextInputFormatter(
+    mask: '+998 ## ### ## ##',
+    filter: { "#": RegExp(r'[0-9]') },
+    type: MaskAutoCompletionType.lazy,
+  );
 
-  // Sanani tanlash funksiyasi
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -37,14 +50,13 @@ class _AccountScreenState extends State<AccountScreen> {
     );
     if (picked != null) {
       setState(() {
-        dobController.text = DateFormat('yyyy/MM/dd').format(picked);
+        dobController.text = DateFormat('yyyy-MM-dd').format(picked);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Inputlar uchun umumiy dekoratsiya stili
     InputDecoration inputDecoration(String hint) => InputDecoration(
       hintText: hint,
       hintStyle: AppStyles.textStyle16Regular(AppColors.subTextColorGray.withOpacity(0.5)),
@@ -82,14 +94,41 @@ class _AccountScreenState extends State<AccountScreen> {
                     style: AppStyles.textStyle16Regular(AppColors.subTextColorGray),
                   ),
                   Gap(24.h),
-
-                  // Full Name
                   _buildLabel("Full Name"),
                   Gap(8.h),
                   TextField(
                     controller: nameController,
                     style: AppStyles.textStyle14Medium(AppColors.textColor),
                     decoration: inputDecoration("Pedro Duarte"),
+                  ),
+                  Gap(8.h),
+                  _buildLabel("Phone"),
+                  Gap(8.h),
+                  TextField(
+                    controller: controllerPhone,
+                    inputFormatters: [maskFormatter], // 3. Maskani ulash
+                    keyboardType: TextInputType.phone,
+                    onChanged: (val) {
+                      setState(() {
+                        isFull = val.length == 17;
+                      });
+                    },
+                    style: AppStyles.textStyle14Medium(AppColors.textColor),
+                    decoration: InputDecoration(
+                      hintText: "+998 _ _  _ _ _  _ _  _ _",
+                      hintStyle: AppStyles.textStyle16Regular(AppColors.subTextColorGray.withOpacity(0.5)),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(100.r),
+                        borderSide: BorderSide(color: Color(0xffE2E8F0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(100.r),
+                        borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+                      ),
+                    ),
                   ),
                   Gap(16.h),
 
@@ -135,8 +174,26 @@ class _AccountScreenState extends State<AccountScreen> {
           ButtonWidget(
             text: "Continue",
             isActive: nameController.text.isNotEmpty && selectedGender != null && dobController.text.isNotEmpty,
-            onTap: () {
-              context.go("/main");
+            onTap: () async{
+              LoadingDialog.show(context);
+              String fullNumber = maskFormatter.getUnmaskedText();
+              Map data = {
+                "fullname": nameController.text,
+                "phone": "+998$fullNumber",
+                "gender": selectedGender.toString().toLowerCase(),
+                "birth_date": dobController.text,
+              };
+              HttpResult res = await _repository.register(data);
+              if(res.status>=200&&res.status<299){
+                LoadingDialog.hide(context);
+                CacheService.savePhone(controllerPhone.text);
+                CacheService.saveBirthDate(nameController.text);
+                CacheService.saveFirstName(selectedGender!);
+                context.go("/verification?phone=+998$fullNumber&isRegister=true");
+              }else{
+                LoadingDialog.hide(context);
+                AppToast.error(context: context, description: res.result['phone']??["code"].toString());
+              }
             },
           ),
           Gap(34.h)

@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_icons.dart';
+import 'package:sehat/utils/cacheservice.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        context.go('/onboarding');
+        CacheService.getToken().isEmpty?context.go('/onboarding'):context.go("/main");
       }
     });
   }

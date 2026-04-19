@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart'; // 1. Import
+import 'package:sehat/src/api_service/repository.dart';
+import 'package:sehat/src/dialog/loading_dialog.dart';
+import 'package:sehat/src/model/http_result.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_styles.dart';
 import 'package:sehat/src/widget/button_widget.dart';
@@ -17,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController controllerPhone = TextEditingController();
   bool isFull = false;
+  final Repository _repository = Repository();
   var maskFormatter = MaskTextInputFormatter(
     mask: '+998 ## ### ## ##',
     filter: { "#": RegExp(r'[0-9]') },
@@ -79,7 +83,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                       filled: true,
                       fillColor: Colors.white,
-                      // Borderlar dizayni
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100.r),
                         borderSide: BorderSide(color: Color(0xffE2E8F0)),
@@ -94,12 +97,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          Gap(16.h), // Tugma va matn orasidagi masofa
+          Gap(16.h),
           Padding(
             padding: EdgeInsets.only(left: 28.0.w,bottom: 24.h),
             child: GestureDetector(
               onTap: () {
-                context.push("/register");
+                context.push("/account");
               },
               child: RichText(
                 text: TextSpan(
@@ -122,9 +125,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ButtonWidget(
             isActive: isFull,
             text: "Continue",
-            onTap: () {
+            onTap: () async{
+              LoadingDialog.show(context);
               String fullNumber = maskFormatter.getUnmaskedText();
-              context.push('/verification');
+              Map data  = {
+                "phone":"+998$fullNumber"
+              };
+              HttpResult res = await _repository.login(data);
+              if(res.status >= 200&&res.status < 299){
+                LoadingDialog.hide(context);
+                context.push("/verification?phone=$fullNumber&isRegister=false");
+              }
             },
           ),
           Gap(34.h)

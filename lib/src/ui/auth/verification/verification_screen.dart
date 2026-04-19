@@ -3,13 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
+import 'package:sehat/src/api_service/repository.dart';
+import 'package:sehat/src/dialog/app_toast.dart';
 import 'package:sehat/src/dialog/loading_dialog.dart';
+import 'package:sehat/src/model/http_result.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_styles.dart';
 import 'package:sehat/src/widget/button_widget.dart';
+import 'package:sehat/utils/cacheservice.dart';
 
 class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({super.key});
+  final String phone,isRegister;
+  const VerificationScreen({super.key, required this.phone, required this.isRegister});
 
   @override
   State<VerificationScreen> createState() => _VerificationScreenState();
@@ -18,6 +23,7 @@ class VerificationScreen extends StatefulWidget {
 class _VerificationScreenState extends State<VerificationScreen> {
   final controller = TextEditingController();
   final focusNode = FocusNode();
+  final Repository _repository = Repository();
 
   bool hasError = false;
   bool isFull = false;
@@ -30,25 +36,52 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
   void _verifyCode() async {
-    if (controller.text == "123456") {
-      setState(() {
-        hasError = false;
-      });
-
-      LoadingDialog.show(context);
-
-      await Future.delayed(const Duration(seconds: 3));
-      context.push('/account');
-
-      if (mounted) {
+    LoadingDialog.show(context);
+    Map data = {
+      "phone": "+${widget.phone.replaceAll(" ", "")}",
+      "code": controller.text,
+    };
+    if(widget.isRegister == "true"){
+      HttpResult result = await _repository.verifyRegister(data);
+      if (result.status >= 200 && result.status < 299) {
+        setState(() {
+          hasError = false;
+        });
+        await Future.delayed(const Duration(seconds: 3));
+        CacheService.saveToken(result.result['access']);
+        context.push('/main');
+        if (mounted) {
+          LoadingDialog.hide(context);
+        }
+      } else {
         LoadingDialog.hide(context);
+        AppToast.error(context: context, description: result.result['code'].toString());
+        setState(() {
+          hasError = true;
+        });
+        // controller.clear();
       }
+    }else{
+      HttpResult result = await _repository.verifyLogin(data);
+      if (result.status >= 200 && result.status < 299) {
+        setState(() {
+          hasError = false;
+        });
+        CacheService.saveToken(result.result['access']);
+        await Future.delayed(const Duration(seconds: 3));
+        widget.isRegister == "true" ? context.push('/account'): context.push('/main');
 
-    } else {
-      setState(() {
-        hasError = true;
-      });
-      // controller.clear();
+        if (mounted) {
+          LoadingDialog.hide(context);
+        }
+      } else {
+        LoadingDialog.hide(context);
+        AppToast.error(context: context, description: result.result['code'].toString());
+        setState(() {
+          hasError = true;
+        });
+        // controller.clear();
+      }
     }
   }
 
@@ -103,7 +136,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   ),
                   Gap(4.h),
                   Text(
-                    "Enter the 6 digit code sent to\n+998 90 123 45 67. Please enter it",
+                    "Enter the 6 digit code sent to\n${widget.phone.replaceAll(" ", "")}. Please enter it",
                     style: AppStyles.textStyle16Regular(AppColors.subTextColorGray),
                   ),
                   Gap(32.h),
@@ -146,8 +179,19 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   ),
                   Gap(24.h),
                   GestureDetector(
-                    onTap: () {
-                      debugPrint("Qayta yuborish so'raldi");
+                    onTap: () async{
+                      LoadingDialog.show(context);
+                      Map data = {
+                        "phone": "${widget.phone.replaceAll(" ", "")}",
+                      };
+                      HttpResult res = await _repository.resendOtp(data);
+                      if(res.status >= 200&&res.status < 299){
+                        LoadingDialog.hide(context);
+                        AppToast.success(context: context, description: "Yangi kod yuborildi");
+                      }else{
+                        LoadingDialog.hide(context);
+                        AppToast.error(context: context, description: res.result['phone']??["code"].toString());
+                      }
                     },
                     child: RichText(
                       text: TextSpan(
