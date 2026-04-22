@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
+import 'package:sehat/src/bloc/blog/blog_bloc.dart';
+import 'package:sehat/src/bloc/event/event_bloc.dart';
 import 'package:sehat/src/bloc/profile/profile_bloc.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_icons.dart';
@@ -18,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    blogBloc.getAllBlog();
     profileBloc.getProfile();
     super.initState();
   }
@@ -218,72 +223,87 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Events",style: AppStyles.textStyle18Medium(AppColors.textColor),),
-                Text("All",style: AppStyles.textStyle14Medium(AppColors.primary),),
-              ],
-            ),
-          ),
-          Divider(
-            color: Color(0xffE2E8F0).withOpacity(0.5),
-          ),
-          Gap(16),
-          SizedBox(
-            width: 1.sw,
-            height: 262.h,
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              scrollDirection: Axis.horizontal,
-                itemBuilder: (ctx,index){
-              return Container(
-                margin: EdgeInsets.only(right: 16.w),
-                width: 200.w,
-                height: 262,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16.r),
-                  color: AppColors.white
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          StreamBuilder(
+            stream: blogBloc.getBlocStream,
+            builder: (context, asyncSnapshot) {
+              if(asyncSnapshot.hasData){
+                var data = asyncSnapshot.data!;
+                return Column(
                   children: [
-                    Container(
-                      width: 1.sw,
-                      height: 133,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(16)
-                        )
-                      ),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(16)
-                          ),
-                          child: Image.asset(AppImages.cardimage,fit: BoxFit.cover,)),
-                    ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          buildIconText(
-                            iconPath: AppIcons.calendar,
-                            text: "Feb 15, 2024",
-                          ),
-                          Gap(6),
-                          Text("Heart health matters",style: AppStyles.textStyle16Medium(AppColors.textColor),),
-                          Gap(6),
-                          Text("Understandin care prevention..",style: AppStyles.textStyle14Regular(AppColors.subTextColorGray),),
+                          Text("Events",style: AppStyles.textStyle18Medium(AppColors.textColor),),
+                          Text("All",style: AppStyles.textStyle14Medium(AppColors.primary),),
                         ],
                       ),
+                    ),
+                    Divider(
+                      color: Color(0xffE2E8F0).withOpacity(0.5),
+                    ),
+                    Gap(16),
+                    SizedBox(
+                      width: 1.sw,
+                      height: 272.h,
+                      child: ListView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: data.length,
+                          itemBuilder: (ctx,index){
+                            return Container(
+                              margin: EdgeInsets.only(right: 16.w),
+                              width: 200.w,
+                              height: 272,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  color: AppColors.white
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 1.sw,
+                                    height: 133,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16)
+                                        )
+                                    ),
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16)
+                                        ),
+                                        child: CachedNetworkImage(imageUrl: data[index].coverImage,fit: BoxFit.cover,)),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        buildIconText(
+                                          iconPath: AppIcons.calendar,
+                                          text: DateFormat('MMM dd,yyyy').format(data[index].publishedAt),
+                                        ),
+                                        Gap(6),
+                                        Text(data[index].title,maxLines: 2,style: AppStyles.textStyle16Medium(AppColors.textColor),),
+                                        Gap(6),
+                                        Text(data[index].description,maxLines: 2,style: AppStyles.textStyle14Regular(AppColors.subTextColorGray),),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
                     )
                   ],
-                ),
-              );
-            }),
+                );
+              }else{
+                return Center(child: CircularProgressIndicator());
+              }
+            }
           )
         ],
       ),

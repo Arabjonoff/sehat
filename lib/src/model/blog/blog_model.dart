@@ -6,7 +6,7 @@ class BlogModel {
   final int count;
   final String? next;
   final String? previous;
-  final List<Result> results;
+  final List<BlogResult> results;
 
   BlogModel({
     required this.count,
@@ -21,12 +21,12 @@ class BlogModel {
     previous: json["previous"],
     results: json["results"] == null
         ? []
-        : List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
+        : List<BlogResult>.from(json["results"].map((x) => BlogResult.fromJson(x))),
   );
 
 }
 
-class Result {
+class BlogResult {
   final int id;
   final String title;
   final String description;
@@ -36,7 +36,7 @@ class Result {
   final DateTime publishedAt;
   final DateTime createdAt;
 
-  Result({
+  BlogResult({
     required this.id,
     required this.title,
     required this.description,
@@ -47,7 +47,7 @@ class Result {
     required this.createdAt,
   });
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory BlogResult.fromJson(Map<String, dynamic> json) => BlogResult(
     id: json["id"] ?? 0,
     title: json["title"] ?? "Sarlavha yo'q",
     description: json["description"] ?? "",
