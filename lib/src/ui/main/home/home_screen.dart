@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:sehat/src/bloc/profile/profile_bloc.dart';
 import 'package:sehat/src/theme/app_colors.dart';
 import 'package:sehat/src/theme/app_icons.dart';
 import 'package:sehat/src/theme/app_styles.dart';
+import 'package:sehat/src/ui/main/home/drawer/drawer_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,51 +17,67 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    profileBloc.getProfile();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DrawerScreen(),
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Row(
-          children: [
-            Container(
-              width: 40.r,
-              height: 40.r,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.asset(AppImages.cardimage,fit: BoxFit.cover,)),
-            ),
-            Spacer(),
-            Container(
-              padding: EdgeInsets.all(5.r),
-              width: 95.w,
-              height: 36.h,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: AppColors.white.withOpacity(0.1)
-              ),
-              child: Row(
-                children: [
-                  SvgPicture.asset(AppIcons.giftbox),
-                  Gap(4.w),
-                  Text("20.000",style: AppStyles.textStyle14Medium(AppColors.white),)
-                ],
-              ),
-            ),
-            Spacer(),
-            Container(
-              padding: EdgeInsets.all(10.r),
-              width: 40.r,
-              height: 40.r,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: AppColors.white.withOpacity(0.1)
-              ),
-              child: SvgPicture.asset(AppIcons.notification),
-            ),
-          ],
+        automaticallyImplyLeading: false,
+        title: Builder(
+          builder: (context) {
+            return Row(
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Container(
+                    width: 40.r,
+                    height: 40.r,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset(AppImages.cardimage,fit: BoxFit.cover,)),
+                  ),
+                ),
+                Spacer(),
+                Container(
+                  padding: EdgeInsets.all(5.r),
+                  width: 95.w,
+                  height: 36.h,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: AppColors.white.withOpacity(0.1)
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(AppIcons.giftbox),
+                      Gap(4.w),
+                      Text("20.000",style: AppStyles.textStyle14Medium(AppColors.white),)
+                    ],
+                  ),
+                ),
+                Spacer(),
+                Container(
+                  padding: EdgeInsets.all(10.r),
+                  width: 40.r,
+                  height: 40.r,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: AppColors.white.withOpacity(0.1)
+                  ),
+                  child: SvgPicture.asset(AppIcons.notification),
+                ),
+              ],
+            );
+          }
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(32.r))

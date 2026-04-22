@@ -18,7 +18,12 @@ class AppStyles {
       _baseStyle(18, FontWeight.w500, color);
 
   static TextStyle textStyle16Medium(Color color) =>
-      _baseStyle(16, FontWeight.w500, color);
+      _baseStyle(16, FontWeight.w700, color);
+  static TextStyle textStyle16MediumW400(Color color) =>
+      _baseStyle(16, FontWeight.w400, color,);
+
+  static TextStyle textStyle16Bold(Color color) =>
+      _baseStyle(16, FontWeight.w600, color);
 
   static TextStyle textStyle16Regular(Color color) =>
       _baseStyle(16, FontWeight.w400, color);

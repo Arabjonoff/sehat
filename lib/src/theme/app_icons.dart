@@ -14,6 +14,16 @@ class AppIcons {
   static const clock = 'assets/icons/clock.svg';
   static const file = 'assets/icons/file.svg';
   static const notification = 'assets/icons/notification.svg';
+  static const logout = 'assets/icons/logout.svg';
+  static const support = 'assets/icons/support.svg';
+  static const about = 'assets/icons/about.svg';
+  static const language = 'assets/icons/translation.svg';
+  static const edit = 'assets/icons/edit.svg';
+  static const refer = 'assets/icons/refer.svg';
+  static const user = 'assets/icons/user.svg';
+
+
+
 }
 class AppImages{
   static const onboard1 = 'assets/images/onboard1.png';

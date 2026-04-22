@@ -46,6 +46,7 @@ dependencies:
   intl: ^0.20.2
   shared_preferences: ^2.5.5
   toastification: ^3.0.3
+  rxdart: ^0.28.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -78,9 +79,9 @@ flutter:
   fonts:
     - family: Montreal
       fonts:
-        - asset: assets/fonts/Montreal-Regular.ttf
+        - asset: assets/fonts/Montreal-Regular.otf
           weight: 400
-        - asset: assets/fonts/Montreal-Bold.ttf
+        - asset: assets/fonts/Montreal-Bold.otf
           weight: 700
   #
   # For details regarding fonts from package dependencies,
